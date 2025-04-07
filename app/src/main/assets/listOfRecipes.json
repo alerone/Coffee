@@ -1,0 +1,154 @@
+{
+    "recipes": [
+      {
+        "name": "Espresso",
+        "description": "A strong and concentrated coffee, the base of many other recipes.",
+        "ingredients": {
+          "coffee": 7,
+          "water": 30,
+          "milk": 0,
+          "milkFoam": 0,
+          "chocolate": 0,
+          "sugar": 0,
+          "condensedMilk": 0,
+          "vanillaIceCream": 0,
+          "whippedCream": 0
+        }
+      },
+      {
+        "name": "Americano",
+        "description": "An espresso diluted with hot water, ideal for a milder flavor.",
+        "ingredients": {
+          "coffee": 7,
+          "water": 120,
+          "milk": 0,
+          "milkFoam": 0,
+          "chocolate": 0,
+          "sugar": 0,
+          "condensedMilk": 0,
+          "vanillaIceCream": 0,
+          "whippedCream": 0
+        }
+      },
+      {
+        "name": "Cappuccino",
+        "description": "An Italian classic with equal parts espresso, steamed milk, and foam.",
+        "ingredients": {
+          "coffee": 7,
+          "water": 0,
+          "milk": 60,
+          "milkFoam": 60,
+          "chocolate": 0,
+          "sugar": 0,
+          "condensedMilk": 0,
+          "vanillaIceCream": 0,
+          "whippedCream": 0
+        }
+      },
+      {
+        "name": "Latte",
+        "description": "A smooth coffee with lots of steamed milk and a bit of foam.",
+        "ingredients": {
+          "coffee": 7,
+          "water": 0,
+          "milk": 180,
+          "milkFoam": 20,
+          "chocolate": 0,
+          "sugar": 0,
+          "condensedMilk": 0,
+          "vanillaIceCream": 0,
+          "whippedCream": 0
+        }
+      },
+      {
+        "name": "Mocha",
+        "description": "A delicious mix of coffee, chocolate, and milk.",
+        "ingredients": {
+          "coffee": 7,
+          "water": 0,
+          "milk": 150,
+          "milkFoam": 0,
+          "chocolate": 20,
+          "sugar": 5,
+          "condensedMilk": 0,
+          "vanillaIceCream": 0,
+          "whippedCream": 0
+        }
+      },
+      {
+        "name": "Macchiato",
+        "description": "Espresso with a small amount of milk foam on top.",
+        "ingredients": {
+          "coffee": 7,
+          "water": 0,
+          "milk": 0,
+          "milkFoam": 15,
+          "chocolate": 0,
+          "sugar": 0,
+          "condensedMilk": 0,
+          "vanillaIceCream": 0,
+          "whippedCream": 0
+        }
+      },
+      {
+        "name": "Café au Lait",
+        "description": "A simple mix of equal parts coffee and milk.",
+        "ingredients": {
+          "coffee": 60,
+          "water": 0,
+          "milk": 60,
+          "milkFoam": 0,
+          "chocolate": 0,
+          "sugar": 0,
+          "condensedMilk": 0,
+          "vanillaIceCream": 0,
+          "whippedCream": 0
+        }
+      },
+      {
+        "name": "Café Bombón",
+        "description": "An espresso served with sweetened condensed milk for a rich, sweet taste.",
+        "ingredients": {
+          "coffee": 7,
+          "water": 0,
+          "milk": 0,
+          "milkFoam": 0,
+          "chocolate": 0,
+          "sugar": 0,
+          "condensedMilk": 30,
+          "vanillaIceCream": 0,
+          "whippedCream": 0
+        }
+      },
+      {
+        "name": "Affogato",
+        "description": "Dessert and coffee in one: vanilla ice cream 'drowned' with hot espresso.",
+        "ingredients": {
+          "coffee": 7,
+          "water": 0,
+          "milk": 0,
+          "milkFoam": 0,
+          "chocolate": 0,
+          "sugar": 0,
+          "condensedMilk": 0,
+          "vanillaIceCream": 50,
+          "whippedCream": 0
+        }
+      },
+      {
+        "name": "Viennese Coffee",
+        "description": "Coffee topped with whipped cream instead of milk or sugar.",
+        "ingredients": {
+          "coffee": 60,
+          "water": 0,
+          "milk": 0,
+          "milkFoam": 0,
+          "chocolate": 0,
+          "sugar": 0,
+          "condensedMilk": 0,
+          "vanillaIceCream": 0,
+          "whippedCream": 40
+        }
+      }
+    ]
+  }
