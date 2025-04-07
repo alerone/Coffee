@@ -3,6 +3,7 @@ package com.alvarobrivaro.coffee.ui.main
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Blender
 import androidx.compose.material.icons.filled.Coffee
 import androidx.compose.material.icons.filled.Forum
 import androidx.compose.material.icons.filled.Inventory
@@ -87,7 +88,7 @@ fun MyBottomAppBar(index: Int = 0, onNavigationClick: (Int) -> Unit) {
             label = { Text(text = "Make Coffee") }
         )
         NavigationBarItem(
-            icon = { Icon(imageVector = Icons.Filled.Forum, contentDescription = "Coffee page") },
+            icon = { Icon(imageVector = Icons.Filled.Blender, contentDescription = "Coffee page") },
             selected = index == 1,
             onClick = { onNavigationClick(1) },
             colors = NavigationBarItemDefaults.colors(
