@@ -1,5 +1,6 @@
 package com.alvarobrivaro.coffee.ui.main
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Coffee
@@ -55,10 +56,12 @@ fun MainScaffold() {
         bottomBar = { MyBottomAppBar(index, onNavigationClick = { index = it }) }
     )
     { padding ->
-        when (index) {
-            0 -> MakeCoffeeScreen(Modifier.padding(padding))
-            1 -> MakeRecipeScreen(Modifier.padding(padding))
-            2 -> InventoryScreen(Modifier.padding(padding))
+        AnimatedContent(targetState = index, label = "") {
+            when (it) {
+                0 -> MakeCoffeeScreen(Modifier.padding(padding))
+                1 -> MakeRecipeScreen(Modifier.padding(padding))
+                2 -> InventoryScreen(Modifier.padding(padding))
+            }
         }
     }
 }

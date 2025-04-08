@@ -1,4 +1,4 @@
-package com.alvarobrivaro.coffee.ui.makecoffee
+package com.alvarobrivaro.coffee.domain
 
 import com.alvarobrivaro.coffee.domain.models.Recipe
 
