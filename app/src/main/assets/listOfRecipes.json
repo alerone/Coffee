@@ -37,10 +37,10 @@
           "coffee": 7,
           "water": 0,
           "milk": 60,
-          "milkFoam": 60,
-          "chocolate": 0,
           "sugar": 0,
+          "chocolate": 0,
           "condensedMilk": 0,
+          "milkFoam": 60,
           "vanillaIceCream": 0,
           "whippedCream": 0
         }

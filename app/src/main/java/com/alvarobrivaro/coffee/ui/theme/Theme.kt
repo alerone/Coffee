@@ -9,18 +9,65 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = PastelBrown,
-    secondary = LightBeige,
-    tertiary = PastelGreen
+    inversePrimary = Brown40,
+    primary = Vainilla70,
+    onPrimary = Vainilla20,
+    primaryContainer = Vainilla30,
+    onPrimaryContainer = Vainilla90,
+    secondary = Brown70,
+    onSecondary = Brown20,
+    secondaryContainer = Brown30,
+    onSecondaryContainer = Brown90,
+    tertiary = OliveGreen70,
+    onTertiary = OliveGreen20,
+    tertiaryContainer = OliveGreen30,
+    onTertiaryContainer = OliveGreen90,
+    background = Grey10,
+    onBackground = Grey90,
+    surface = GreyBrown30,
+    onSurface = GreyBrown80,
+    surfaceVariant = OliveGreen90,
+    onSurfaceVariant = OliveGreen20,
+    inverseSurface = Grey90,
+    inverseOnSurface = Grey10,
+    error = Red80,
+    onError = Red20,
+    errorContainer = Red30,
+    onErrorContainer = Red90,
+    outline = GreyBrown80,
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Brown,
-    secondary = Beige,
-    tertiary = OliveGreen
+    primary = Vainilla40,
+    onPrimary = Color.White,
+    primaryContainer = Vainilla60,
+    inversePrimary = Vainilla70,
+    onPrimaryContainer = Vainilla20,
+    secondary = Brown40,
+    onSecondary = Color.White,
+    secondaryContainer = Brown90,
+    onSecondaryContainer = Brown10,
+    tertiary = OliveGreen40,
+    onTertiary = Color.White,
+    tertiaryContainer = OliveGreen90,
+    onTertiaryContainer = OliveGreen10,
+    background = Vainilla95,
+    onBackground = Grey10,
+    surface = GreyBrown80,
+    surfaceVariant = OliveGreen30,
+    onSurfaceVariant = OliveGreen80,
+    onSurface = GreyBrown30,
+    inverseSurface = Grey20,
+    inverseOnSurface = Grey95,
+    error = Red40,
+    onError = Color.White,
+    errorContainer = Red90,
+    onErrorContainer = Red10,
+    outline = GreyBrown50,
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),

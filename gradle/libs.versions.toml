@@ -15,6 +15,7 @@ roomRuntime = "2.6.1"
 runtime = "1.7.8"
 runtimeLivedata = "1.7.8"
 dagger = "2.51.1"
+hiltNavigationCompose = "1.2.0"
 firebaseCrashlyticsBuildtools = "3.0.3"
 coil = "2.7.0"
 
@@ -29,6 +30,7 @@ androidx-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedat
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "dagger" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "dagger" }
+androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }

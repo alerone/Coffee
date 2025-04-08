@@ -1,6 +1,7 @@
 package com.alvarobrivaro.coffee.data.makeCoffee
 
 data class Recipe(
+
     val name: String,
     val description: String,
     val ingredients: Ingredients

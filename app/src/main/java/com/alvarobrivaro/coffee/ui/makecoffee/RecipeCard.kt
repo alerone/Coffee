@@ -15,14 +15,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.zIndex
 import com.alvarobrivaro.coffee.R
-import com.alvarobrivaro.coffee.data.makeCoffee.Recipe
+import com.alvarobrivaro.coffee.domain.models.Recipe
 
 @Composable
 fun RecipeCard(
     recipe: Recipe,
-    isPreparing: Boolean,
-    onPrepareClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isPreparing: Boolean = false,
+    onPrepareClick: () -> Unit = {},
 ) {
     var showDialog by remember { mutableStateOf(false) }
 
@@ -67,23 +67,10 @@ fun RecipeCard(
                     )
                     
                     Spacer(modifier = Modifier.height(8.dp))
-                    
-                    // Show non-zero ingredients
-                    val ingredients = listOf(
-                        "Coffee" to recipe.ingredients.coffee,
-                        "Water" to recipe.ingredients.water,
-                        "Milk" to recipe.ingredients.milk,
-                        "Milk Foam" to recipe.ingredients.milkFoam,
-                        "Chocolate" to recipe.ingredients.chocolate,
-                        "Sugar" to recipe.ingredients.sugar,
-                        "Condensed Milk" to recipe.ingredients.condensedMilk,
-                        "Vanilla Ice Cream" to recipe.ingredients.vanillaIceCream,
-                        "Whipped Cream" to recipe.ingredients.whippedCream
-                    ).filter { it.second > 0 }
-                    
-                    ingredients.forEach { (name, amount) ->
+
+                    recipe.ingredients.forEach { ingredient ->
                         Text(
-                            text = "$name: $amount ml",
+                            text = "${ingredient.ingredient.name}: ${ingredient.quantity} ${ingredient.unit}",
                             style = MaterialTheme.typography.bodySmall
                         )
                     }
