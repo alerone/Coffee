@@ -2,37 +2,20 @@ package com.alvarobrivaro.coffee.ui.makerecipe
 
 import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.VerticalDivider
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.produceState
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -44,8 +27,11 @@ import com.alvarobrivaro.coffee.R
 import com.alvarobrivaro.coffee.domain.GetIngredientState
 import com.alvarobrivaro.coffee.domain.GetRecipeState
 import com.alvarobrivaro.coffee.domain.models.Ingredient
+import com.alvarobrivaro.coffee.domain.models.IngredientWithQuantity
 import com.alvarobrivaro.coffee.ui.makecoffee.RecipesList
 import com.alvarobrivaro.coffee.ui.theme.CoffeeTheme
+import com.alvarobrivaro.coffee.ui.theme.Vainilla70
+import com.alvarobrivaro.coffee.ui.theme.Vainilla90
 import kotlin.collections.forEach
 
 @Preview
@@ -60,6 +46,7 @@ fun MakeRecipePreview() {
 
 @Composable
 fun MakeRecipeScreen(modifier: Modifier, viewModel: MakeRecipeViewModel = hiltViewModel()) {
+    var showDialog by remember { mutableStateOf(false) }
 
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     val getRecipeState by produceState<GetRecipeState>(
@@ -71,6 +58,7 @@ fun MakeRecipeScreen(modifier: Modifier, viewModel: MakeRecipeViewModel = hiltVi
             viewModel.getRecipeState.collect { value = it }
         }
     }
+
     val getIngredientsState by produceState<GetIngredientState>(
         initialValue = GetIngredientState.Loading,
         key1 = lifecycle,
@@ -83,49 +71,169 @@ fun MakeRecipeScreen(modifier: Modifier, viewModel: MakeRecipeViewModel = hiltVi
 
     when (getRecipeState) {
         is GetRecipeState.Error -> TODO()
-        GetRecipeState.Loading ->
+        GetRecipeState.Loading -> {
             Box(modifier = modifier.fillMaxSize()) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
+        }
         is GetRecipeState.Success -> {
             val recipes = (getRecipeState as GetRecipeState.Success).recipes
             if (recipes.isEmpty()) {
                 EmptyView(modifier)
             } else {
-                Box(modifier = modifier
-                    .fillMaxSize()
-                    .padding(16.dp)) {
-                    RecipesList(modifier = Modifier.align(Alignment.TopCenter), recipes = recipes)
-                    FabAdd(Modifier.align(Alignment.BottomEnd))
+                Box(modifier = modifier.fillMaxSize()) {
+                    RecipesList(modifier = Modifier.fillMaxWidth(), recipes = recipes)
+                    FabAdd(Modifier.align(Alignment.BottomEnd)) { showDialog = true }
                 }
             }
         }
     }
-}
 
-@Composable
-fun AddRecipeDialog(show: Boolean, viewModel: MakeRecipeViewModel, onDismiss: () -> Unit, onConfirm: () -> Unit){
-    var selectedIngredient by remember { mutableStateOf<Ingredient?>(null) }
-    Column {
-//        IngredientDropdown() { }
+    if (showDialog) {
+        AddRecipeDialog(
+            show = showDialog,
+            viewModel = viewModel,
+            onDismiss = { showDialog = false },
+            onConfirm = { showDialog = false },
+            ingredientsState = getIngredientsState
+        )
     }
 }
 
 @Composable
-fun IngredientDropdown (ingredients : List<Ingredient>, selectedIngredient: Ingredient?, onIngredientSelected: (Ingredient) -> Unit) {
-    var expanded by remember { mutableStateOf(false) }
-    var selectedText by remember { mutableStateOf(selectedIngredient?.name ?: "Select an ingredient") }
+fun AddRecipeDialog(
+    show: Boolean,
+    viewModel: MakeRecipeViewModel,
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit,
+    ingredientsState: GetIngredientState
+) {
+    var recipeName by remember { mutableStateOf("") }
+    var recipeDescription by remember { mutableStateOf("") }
+    var selectedIngredients by remember { mutableStateOf<List<IngredientWithQuantity>>(emptyList()) }
 
-    Box(
-        modifier = Modifier
-            .padding(16.dp)
-    ) {
-        OutlinedButton(onClick = { expanded = !expanded }) {
-            Row {
-                Icon(Icons.Default.MoreVert, contentDescription = "More options")
-                VerticalDivider(Modifier.size(2.dp))
-                Text(selectedText, style = MaterialTheme.typography.bodySmall)
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.making_recipe),
+                    contentDescription = "Create recipe",
+                    modifier = Modifier
+                        .size(110.dp)
+                        .padding(bottom = 16.dp)
+                )
+                Text(
+                    text = "Create New Recipe",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = Vainilla90
+                )
             }
+        },
+        text = {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(13.dp)
+            ) {
+                OutlinedTextField(
+                    value = recipeName,
+                    onValueChange = { recipeName = it },
+                    label = { Text("🧾 Name", color = Vainilla70) },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                
+                OutlinedTextField(
+                    value = recipeDescription,
+                    onValueChange = { recipeDescription = it },
+                    label = { Text("👉 Description", color = Vainilla70) },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                when (ingredientsState) {
+                    is GetIngredientState.Success -> {
+                        val ingredients = (ingredientsState as GetIngredientState.Success).recipes
+                        IngredientList(
+                            ingredients = ingredients,
+                            selectedIngredients = selectedIngredients,
+                            onIngredientSelected = { ingredient, quantity, unit ->
+                                val newIngredient = IngredientWithQuantity(
+                                    ingredient = ingredient,
+                                    quantity = quantity,
+                                    unit = unit
+                                )
+                                selectedIngredients = selectedIngredients + newIngredient
+                            },
+                            ingredientUnits = viewModel.ingredientUnits
+                        )
+                    }
+                    GetIngredientState.Loading -> {
+                        CircularProgressIndicator()
+                    }
+                    is GetIngredientState.Error -> {
+                        Text("Error loading ingredients")
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    viewModel.createRecipe(recipeName, recipeDescription, selectedIngredients)
+                    onConfirm()
+                },
+                enabled = recipeName.isNotBlank() && recipeDescription.isNotBlank() && selectedIngredients.isNotEmpty()
+            ) {
+                Text("✅ Create")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("❌ Cancel")
+            }
+        }
+    )
+}
+
+@Composable
+fun IngredientList(
+    ingredients: List<Ingredient>,
+    selectedIngredients: List<IngredientWithQuantity>,
+    onIngredientSelected: (Ingredient, Double, String) -> Unit,
+    ingredientUnits: List<String>
+) {
+    var expanded by remember { mutableStateOf(false) }
+    var selectedIngredient by remember { mutableStateOf<Ingredient?>(null) }
+    var quantity by remember { mutableStateOf("") }
+    var selectedUnit by remember { mutableStateOf("") }
+
+    Column {
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "Ingredients",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(bottom = 8.dp),
+                color = Vainilla90
+            )
+        }
+
+        selectedIngredients.forEach { ingredient ->
+            Text(
+                text = "${ingredient.ingredient.name}: ${ingredient.quantity} ${ingredient.unit}",
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+
+        OutlinedButton(
+            onClick = { expanded = true },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(selectedIngredient?.name ?: "🍱 Select Ingredient")
         }
         DropdownMenu(
             expanded = expanded,
@@ -133,14 +241,73 @@ fun IngredientDropdown (ingredients : List<Ingredient>, selectedIngredient: Ingr
         ) {
             ingredients.forEach { ingredient ->
                 DropdownMenuItem(
-                    text = { Text(ingredient.name, style = MaterialTheme.typography.bodySmall) },
+                    text = { Text(ingredient.name) },
                     onClick = {
-                        selectedText = ingredient.name
+                        selectedIngredient = ingredient
                         expanded = false
-                        onIngredientSelected(ingredient)
                     }
                 )
             }
+        }
+
+        var unitExpanded by remember { mutableStateOf(false) }
+        OutlinedButton(
+            onClick = { unitExpanded = true },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(selectedUnit.ifEmpty { "🧃 Select Unit" })
+        }
+        DropdownMenu(
+            expanded = unitExpanded,
+            onDismissRequest = { unitExpanded = false }
+        ) {
+            ingredientUnits.forEach { unit ->
+                DropdownMenuItem(
+                    text = { Text(unit) },
+                    onClick = {
+                        selectedUnit = unit
+                        unitExpanded = false
+                    }
+                )
+            }
+        }
+
+        OutlinedTextField(
+            value = quantity,
+            onValueChange = { quantity = it },
+            label = { Text("📦 Quantity", color = Vainilla70) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            IconButton(
+                onClick = {
+                    if (selectedIngredient != null && quantity.isNotBlank() && selectedUnit.isNotBlank()) {
+                        onIngredientSelected(
+                            selectedIngredient!!,
+                            quantity.toDoubleOrNull() ?: 0.0,
+                            selectedUnit
+                        )
+                        selectedIngredient = null
+                        quantity = ""
+                        selectedUnit = ""
+                    }
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Add ingredient",
+                    tint = Vainilla90
+                )
+            }
+            Text(
+                text = "👈 Add more",
+                color = Vainilla90
+            )
         }
     }
 }
@@ -166,21 +333,22 @@ fun EmptyView(modifier: Modifier) {
                 fontWeight = FontWeight.Medium
             )
         }
-        FabAdd(Modifier.align(Alignment.BottomEnd))
+        FabAdd(Modifier.align(Alignment.BottomEnd)) { }
     }
 }
 
 @Composable
-fun FabAdd(modifier: Modifier) {
+fun FabAdd(modifier: Modifier, onClick: () -> Unit) {
     FloatingActionButton(
-        onClick = {},
+        onClick = onClick,
         elevation = FloatingActionButtonDefaults.elevation(
             defaultElevation = 3.dp,
             focusedElevation = 0.dp,
             hoveredElevation = 0.dp,
             pressedElevation = 0.dp
         ),
-        modifier = modifier,
+        modifier = modifier
+            .padding(16.dp),
         containerColor = MaterialTheme.colorScheme.primaryContainer
     ) {
         Icon(

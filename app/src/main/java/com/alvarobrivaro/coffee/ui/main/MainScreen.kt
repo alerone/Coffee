@@ -46,10 +46,10 @@ fun MainScaffold() {
     Scaffold(
         topBar = {
             val title = when (index) {
-                0 -> "Make Coffee"
-                1 -> "Make Recipe"
-                2 -> "Inventory"
-                else -> "Make Coffee"
+                0 -> "☕ Coffee Machine"
+                1 -> "📖 Recipe List"
+                2 -> "🧰 Inventory"
+                else -> "☕ Coffee Machine"
             }
             MyTopAppBar(title)
         },
@@ -92,7 +92,7 @@ fun MyBottomAppBar(index: Int = 0, onNavigationClick: (Int) -> Unit) {
                 selectedTextColor = MaterialTheme.colorScheme.primary,
                 indicatorColor = Color.Transparent
             ),
-            label = { Text(text = "Make Coffee") }
+            label = { Text(text = "Coffee Machine") }
         )
         NavigationBarItem(
             icon = {
@@ -110,7 +110,7 @@ fun MyBottomAppBar(index: Int = 0, onNavigationClick: (Int) -> Unit) {
                 selectedTextColor = MaterialTheme.colorScheme.primary,
                 indicatorColor = Color.Transparent
             ),
-            label = { Text(text = "Make Recipe") }
+            label = { Text(text = "Recipe List") }
         )
         NavigationBarItem(
             icon = {

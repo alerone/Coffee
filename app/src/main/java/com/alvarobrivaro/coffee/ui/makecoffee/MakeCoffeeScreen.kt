@@ -5,32 +5,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -43,10 +26,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import com.alvarobrivaro.coffee.R
 import com.alvarobrivaro.coffee.domain.GetRecipeState
-import com.alvarobrivaro.coffee.domain.models.Ingredient
-import com.alvarobrivaro.coffee.domain.models.IngredientWithQuantity
 import com.alvarobrivaro.coffee.domain.models.Recipe
-import com.alvarobrivaro.coffee.ui.makerecipe.MakeRecipeViewModel
 
 @Composable
 fun MakeCoffeeScreen(modifier: Modifier, viewModel: MakeCoffeeViewModel = hiltViewModel()) {
@@ -73,19 +53,17 @@ fun MakeCoffeeScreen(modifier: Modifier, viewModel: MakeCoffeeViewModel = hiltVi
             if (recipes.isEmpty()) {
                 EmptyView(modifier)
             } else {
-                Box(modifier = modifier.fillMaxSize().padding(16.dp)) {
-                    RecipesList(Modifier, recipes)
-                }
+                RecipesList(modifier, recipes)
             }
         }
     }
 }
 
-
 @Composable
 fun RecipesList(modifier: Modifier, recipes: List<Recipe>) {
     LazyColumn(
         modifier = modifier,
+        contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(recipes, key = { it.id }) {

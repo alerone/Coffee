@@ -16,6 +16,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.zIndex
 import com.alvarobrivaro.coffee.R
 import com.alvarobrivaro.coffee.domain.models.Recipe
+import com.alvarobrivaro.coffee.ui.theme.Vainilla70
+import com.alvarobrivaro.coffee.ui.theme.Vainilla80
 
 @Composable
 fun RecipeCard(
@@ -113,7 +115,7 @@ fun RecipeCard(
                 }
             },
             text = {
-                Text("Do you want to purchase this ${recipe.name}?")
+                Text("Do you want to purchase this ${recipe.name}?", color = Vainilla80)
             },
             confirmButton = {
                 TextButton(
@@ -122,14 +124,14 @@ fun RecipeCard(
                         onPrepareClick()
                     }
                 ) {
-                    Text("Yes")
+                    Text("✅ Yes")
                 }
             },
             dismissButton = {
                 TextButton(
                     onClick = { showDialog = false }
                 ) {
-                    Text("No")
+                    Text("❌ No")
                 }
             }
         )

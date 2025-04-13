@@ -7,7 +7,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import com.alvarobrivaro.coffee.data.ingredient.IngredientEntity
-import com.alvarobrivaro.coffee.data.makeCoffee.Ingredients
 import com.alvarobrivaro.coffee.data.recipe.RecipeEntity
 import com.alvarobrivaro.coffee.data.recipe.RecipeIngredientEntity
 import com.alvarobrivaro.coffee.data.recipe.RecipeWithIngredients
@@ -42,4 +41,10 @@ interface CoffeeAppDao {
 
     @Query("DELETE FROM recipes")
     suspend fun deleteAllRecipes()
+
+    @Query("DELETE FROM ingredients")
+    suspend fun deleteAllIngredients()
+
+    @Query("DELETE FROM recipe_ingredients")
+    suspend fun deleteAllRecipeIngredients()
 }
