@@ -12,11 +12,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.zIndex
 import com.alvarobrivaro.coffee.R
 import com.alvarobrivaro.coffee.domain.models.Recipe
-import com.alvarobrivaro.coffee.ui.theme.Vainilla70
 import com.alvarobrivaro.coffee.ui.theme.Vainilla80
 
 @Composable
@@ -25,6 +23,7 @@ fun RecipeCard(
     modifier: Modifier = Modifier,
     isPreparing: Boolean = false,
     onPrepareClick: () -> Unit = {},
+    showPurchaseDialog: Boolean = false
 ) {
     var showDialog by remember { mutableStateOf(false) }
 
@@ -93,7 +92,7 @@ fun RecipeCard(
         }
     }
 
-    if (showDialog) {
+    if (showPurchaseDialog && showDialog) {
         AlertDialog(
             onDismissRequest = { showDialog = false },
             title = {
@@ -136,4 +135,5 @@ fun RecipeCard(
             }
         )
     }
-} 
+}
+

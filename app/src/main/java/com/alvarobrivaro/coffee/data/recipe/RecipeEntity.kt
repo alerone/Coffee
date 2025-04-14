@@ -30,7 +30,7 @@ data class RecipeIngredientEntity(
     val recipeId: Long,
     val ingredientId: Long,
     val quantity: Double,
-    val unit: String // unidad: "g", "ml", "taza", etc.
+    val unit: String // unidad: "gr, "ml"
 )
 
 data class RecipeWithIngredients(

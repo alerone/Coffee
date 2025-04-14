@@ -3,6 +3,7 @@ package com.alvarobrivaro.coffee.ui.makerecipe
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alvarobrivaro.coffee.domain.AddRecipeUseCase
+import com.alvarobrivaro.coffee.domain.DeleteRecipeUseCase
 import com.alvarobrivaro.coffee.domain.GetIngredientState
 import com.alvarobrivaro.coffee.domain.GetIngredientState.Success
 import com.alvarobrivaro.coffee.domain.GetIngredientUnitsUseCase
@@ -27,6 +28,7 @@ class MakeRecipeViewModel @Inject constructor(
     getIngredientsUseCase: GetIngredientsUseCase,
     private val addRecipeUseCase: AddRecipeUseCase,
     private val getIngredientUnitsUseCase: GetIngredientUnitsUseCase,
+    private val deleteRecipeUseCase: DeleteRecipeUseCase
 ): ViewModel(){
 
     val getRecipeState: StateFlow<GetRecipeState> =
@@ -56,5 +58,11 @@ class MakeRecipeViewModel @Inject constructor(
     }
 
     val ingredientUnits: List<String> = getIngredientUnitsUseCase()
+
+    fun deleteRecipe(recipeId: Long) {
+        viewModelScope.launch {
+            deleteRecipeUseCase(recipeId)
+        }
+    }
 
 }

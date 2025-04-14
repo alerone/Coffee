@@ -44,4 +44,8 @@ class CoffeeAppRepository @Inject constructor(private val coffeeAppDao: CoffeeAp
         coffeeAppDao.deleteAllRecipes()
     }
 
+    suspend fun deleteRecipe(recipeId: Long) {
+        coffeeAppDao.deleteRecipe(recipeId)
+    }
+
 }

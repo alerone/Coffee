@@ -1,12 +1,12 @@
 package com.alvarobrivaro.coffee.ui.makerecipe
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -59,7 +61,8 @@ import com.alvarobrivaro.coffee.domain.GetIngredientState
 import com.alvarobrivaro.coffee.domain.GetRecipeState
 import com.alvarobrivaro.coffee.domain.models.Ingredient
 import com.alvarobrivaro.coffee.domain.models.IngredientWithQuantity
-import com.alvarobrivaro.coffee.ui.makecoffee.RecipesList
+import com.alvarobrivaro.coffee.domain.models.Recipe
+import com.alvarobrivaro.coffee.ui.makecoffee.SwipeableRecipeCard
 import com.alvarobrivaro.coffee.ui.theme.CoffeeTheme
 
 @Composable
@@ -110,7 +113,7 @@ fun MakeRecipeScreen(modifier: Modifier, viewModel: MakeRecipeViewModel = hiltVi
                 EmptyView(modifier)
             } else {
                 Box(modifier = modifier.fillMaxSize()) {
-                    RecipesList(modifier = Modifier.fillMaxWidth(), recipes = recipes)
+                    RecipesList(modifier = Modifier.fillMaxWidth(), recipes = recipes, viewModel = viewModel)
                     FabAdd(Modifier.align(Alignment.BottomEnd)) { showDialog = true }
                 }
             }
@@ -496,6 +499,22 @@ fun DropdownMenuUnits(
                     )
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun RecipesList(modifier: Modifier, recipes: List<Recipe>, viewModel: MakeRecipeViewModel) {
+    LazyColumn(
+        modifier = modifier,
+        contentPadding = PaddingValues(16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items(recipes, key = { it.id }) { recipe ->
+            SwipeableRecipeCard(
+                recipe = recipe,
+                onDelete = { id -> viewModel.deleteRecipe(id) }
+            )
         }
     }
 }

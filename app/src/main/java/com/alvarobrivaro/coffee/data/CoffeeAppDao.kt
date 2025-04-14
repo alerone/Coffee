@@ -47,4 +47,7 @@ interface CoffeeAppDao {
 
     @Query("DELETE FROM recipe_ingredients")
     suspend fun deleteAllRecipeIngredients()
+
+    @Query("DELETE FROM recipes WHERE id = :recipeId")
+    suspend fun deleteRecipe(recipeId: Long)
 }

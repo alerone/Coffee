@@ -66,8 +66,8 @@ fun RecipesList(modifier: Modifier, recipes: List<Recipe>) {
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(recipes, key = { it.id }) {
-            RecipeCard(it)
+        items(recipes, key = { it.id }) { recipe ->
+            RecipeCard(recipe, showPurchaseDialog = true)
         }
     }
 }

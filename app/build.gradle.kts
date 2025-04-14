@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.alvarobrivaro.coffee"
-        minSdk = 24
+        minSdk = 25
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -57,6 +57,9 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.firebase.crashlytics.buildtools)
     implementation(libs.androidx.runtime)
+    implementation(libs.androidx.material)
+    implementation(libs.androidx.compose.material)
+    implementation(libs.androidx.foundation)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
