@@ -54,6 +54,7 @@ val Red10 = Color(0xFF410001)
 val Red20 = Color(0xFF680003)
 val Red30 = Color(0xFF930006)
 val Red40 = Color(0xFFBA1B1B)
+val Red60 = Color(0xFFD46454)
 val Red80 = Color(0xFFFFB4A9)
 val Red90 = Color(0xFFFFDAD4)
 
