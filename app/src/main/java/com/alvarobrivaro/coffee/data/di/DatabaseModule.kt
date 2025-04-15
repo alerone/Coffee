@@ -22,6 +22,8 @@ class DatabaseModule {
     @Provides
     @Singleton
     fun provideCoffeeAppDatabase(@ApplicationContext context: Context) : CoffeeAppDatabase {
-        return Room.databaseBuilder(context, CoffeeAppDatabase::class.java, "CoffeeAppDatabase").build()
+        return Room.databaseBuilder(context, CoffeeAppDatabase::class.java, "CoffeeAppDatabase")
+            .fallbackToDestructiveMigration()
+            .build()
     }
 }

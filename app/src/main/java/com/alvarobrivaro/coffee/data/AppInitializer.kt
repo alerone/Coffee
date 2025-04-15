@@ -11,36 +11,38 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import com.alvarobrivaro.coffee.data.models.JsonRecipe
+import com.alvarobrivaro.coffee.data.inventory.InventoryEntity
+import com.alvarobrivaro.coffee.data.models.JsonIngredient
 
 class AppInitializer @Inject constructor(
     private val dao: CoffeeAppDao,
     private val context: Context
 ) {
     suspend fun seedIfNeeded() {
-        //dao.deleteAllRecipeIngredients()
-        //dao.deleteAllIngredients()
-        //dao.deleteAllRecipes()
+        dao.deleteAllRecipeIngredients()
+        dao.deleteAllIngredients()
+        dao.deleteAllRecipes()
         val ingredientsCount = dao.getIngredientsCount()
 
         if (ingredientsCount == 0) {
             CoroutineScope(Dispatchers.IO).launch {
-                val jsonString = context.assets.open("listOfRecipes.json").bufferedReader().use { it.readText() }
-                val type = object : TypeToken<List<JsonRecipe>>() {}.type
-                val recipes = Gson().fromJson<List<JsonRecipe>>(jsonString, type)
+                val jsonStringRecipes = context.assets.open("listOfRecipes.json").bufferedReader().use { it.readText() }
+                val typeRecipes = object : TypeToken<List<JsonRecipe>>() {}.type
+                val recipes = Gson().fromJson<List<JsonRecipe>>(jsonStringRecipes, typeRecipes)
 
-            val uniqueIngredients = recipes.flatMap { it.ingredients }
-                .distinctBy { it.id }
-                .map { IngredientEntity(it.id.toLong(), it.name) }
+                val uniqueIngredients = recipes.flatMap { it.ingredients }
+                    .distinctBy { it.id }
+                    .map { IngredientEntity(it.id.toLong(), it.name) }
 
-            uniqueIngredients.forEach { dao.insertIngredient(it) }
+                uniqueIngredients.forEach { dao.insertIngredient(it) }
 
-            recipes.forEach { jsonRecipe ->
-                val recipe = RecipeEntity(
-                    jsonRecipe.id.toLong(),
-                    jsonRecipe.name,
-                    jsonRecipe.description
-                )
-                dao.insertRecipe(recipe)
+                recipes.forEach { jsonRecipe ->
+                    val recipe = RecipeEntity(
+                        jsonRecipe.id.toLong(),
+                        jsonRecipe.name,
+                        jsonRecipe.description
+                    )
+                    dao.insertRecipe(recipe)
 
                     jsonRecipe.ingredients.forEach { jsonIngredient ->
                         val recipeIngredient = RecipeIngredientEntity(
@@ -52,6 +54,24 @@ class AppInitializer @Inject constructor(
                         )
                         dao.insertRecipeIngredient(recipeIngredient)
                     }
+                }
+
+                val jsonStringIngredients = context.assets.open("ingredients.json").bufferedReader().use { it.readText() }
+                val type = object : TypeToken<List<JsonIngredient>>() {}.type
+                val ingredients = Gson().fromJson<List<JsonIngredient>>(jsonStringIngredients, type)
+
+                ingredients.forEach { ingredientJson ->
+                    val ingredientEntity = IngredientEntity(
+                        id = ingredientJson.id.toLong(),
+                        name = ingredientJson.name
+                    )
+                    val inventoryEntity = InventoryEntity(
+                        ingredientId = ingredientJson.id.toLong(),
+                        quantity = ingredientJson.quantity,
+                        unit = ingredientJson.unit
+                    )
+                    dao.insertIngredient(ingredientEntity)
+                    dao.insertInventory(inventoryEntity)
                 }
             }
         }

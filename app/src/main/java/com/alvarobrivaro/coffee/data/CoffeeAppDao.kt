@@ -7,6 +7,8 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import com.alvarobrivaro.coffee.data.ingredient.IngredientEntity
+import com.alvarobrivaro.coffee.data.inventory.InventoryEntity
+import com.alvarobrivaro.coffee.data.inventory.InventoryWithIngredient
 import com.alvarobrivaro.coffee.data.recipe.RecipeEntity
 import com.alvarobrivaro.coffee.data.recipe.RecipeIngredientEntity
 import com.alvarobrivaro.coffee.data.recipe.RecipeWithIngredients
@@ -24,6 +26,9 @@ interface CoffeeAppDao {
     @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     suspend fun insertIngredient(ingredient: IngredientEntity): Long
 
+    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
+    suspend fun insertInventory(inventory: InventoryEntity): Long
+
     @Transaction
     @Query("SELECT * FROM recipes WHERE id = :recipeId")
     suspend fun getRecipeWithIngredients(recipeId: Long): RecipeWithIngredients
@@ -38,6 +43,16 @@ interface CoffeeAppDao {
     @Transaction
     @Query("SELECT * FROM ingredients")
     fun getAllIngredients(): Flow<List<IngredientEntity>>
+
+    @Query("SELECT * FROM inventory WHERE ingredientId = :ingredientId")
+    suspend fun getInventoryByIngredientId(ingredientId: Long): InventoryEntity?
+
+    @Query("UPDATE inventory SET quantity = :quantity WHERE ingredientId = :ingredientId")
+    suspend fun updateInventory(ingredientId: Long, quantity: Double)
+
+    @Transaction
+    @Query("SELECT * FROM inventory")
+    fun getAllInventory(): Flow<List<InventoryWithIngredient>>
 
     @Query("DELETE FROM recipes")
     suspend fun deleteAllRecipes()

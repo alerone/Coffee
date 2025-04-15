@@ -1,7 +1,5 @@
 package com.alvarobrivaro.coffee.ui.makerecipe
 
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -22,7 +20,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Carpenter
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
@@ -75,8 +72,6 @@ import com.alvarobrivaro.coffee.ui.makerecipe.model.RecipeUI
 import com.alvarobrivaro.coffee.ui.theme.CoffeeTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import java.sql.Time
 
 @Composable
 fun MakeRecipePreview() {
