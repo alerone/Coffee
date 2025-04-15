@@ -58,7 +58,6 @@ dependencies {
     implementation(libs.firebase.crashlytics.buildtools)
     implementation(libs.androidx.runtime)
     implementation(libs.androidx.material)
-    implementation(libs.androidx.compose.material)
     implementation(libs.androidx.foundation)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -59,7 +59,7 @@ class MakeRecipeViewModel @Inject constructor(
 
     val ingredientUnits: List<String> = getIngredientUnitsUseCase()
 
-    fun deleteRecipe(recipeId: Long) {
+    fun deleteRecipe(recipeId: Int) {
         viewModelScope.launch {
             deleteRecipeUseCase(recipeId)
         }

@@ -1,5 +1,7 @@
 package com.alvarobrivaro.coffee.ui.makerecipe
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -9,16 +11,19 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Carpenter
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -38,11 +43,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -62,8 +70,13 @@ import com.alvarobrivaro.coffee.domain.GetRecipeState
 import com.alvarobrivaro.coffee.domain.models.Ingredient
 import com.alvarobrivaro.coffee.domain.models.IngredientWithQuantity
 import com.alvarobrivaro.coffee.domain.models.Recipe
-import com.alvarobrivaro.coffee.ui.makecoffee.SwipeableRecipeCard
+import com.alvarobrivaro.coffee.ui.makecoffee.RecipeCard
+import com.alvarobrivaro.coffee.ui.makerecipe.model.RecipeUI
 import com.alvarobrivaro.coffee.ui.theme.CoffeeTheme
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.sql.Time
 
 @Composable
 fun MakeRecipePreview() {
@@ -77,7 +90,7 @@ fun MakeRecipePreview() {
 @Composable
 fun MakeRecipeScreen(modifier: Modifier, viewModel: MakeRecipeViewModel = hiltViewModel()) {
     var showDialog by remember { mutableStateOf(false) }
-
+    val scope = rememberCoroutineScope()
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     val getRecipeState by produceState<GetRecipeState>(
         initialValue = GetRecipeState.Loading,
@@ -113,7 +126,17 @@ fun MakeRecipeScreen(modifier: Modifier, viewModel: MakeRecipeViewModel = hiltVi
                 EmptyView(modifier)
             } else {
                 Box(modifier = modifier.fillMaxSize()) {
-                    RecipesList(modifier = Modifier.fillMaxWidth(), recipes = recipes, viewModel = viewModel)
+                    RecipesListNew(
+                        modifier = Modifier.fillMaxWidth(),
+                        recipes = recipes,
+                        viewModel = viewModel,
+                        scope = scope
+                    )
+//                    RecipesList(
+//                        modifier = Modifier.fillMaxWidth(),
+//                        recipes = recipes,
+//                        viewModel = viewModel
+//                    )
                     FabAdd(Modifier.align(Alignment.BottomEnd)) { showDialog = true }
                 }
             }
@@ -273,6 +296,7 @@ fun CoffeeTextField(
         )
     )
 }
+
 @Composable
 fun MatchaTextField(
     modifier: Modifier = Modifier,
@@ -504,17 +528,47 @@ fun DropdownMenuUnits(
 }
 
 @Composable
-fun RecipesList(modifier: Modifier, recipes: List<Recipe>, viewModel: MakeRecipeViewModel) {
+fun RecipesListNew(modifier: Modifier, recipes: List<Recipe>, viewModel: MakeRecipeViewModel, scope: CoroutineScope) {
+    val recipesUI = recipes.map { RecipeUI(it) }.toMutableStateList()
     LazyColumn(
-        modifier = modifier,
+        modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(recipes, key = { it.id }) { recipe ->
-            SwipeableRecipeCard(
-                recipe = recipe,
-                onDelete = { id -> viewModel.deleteRecipe(id) }
-            )
+        itemsIndexed(
+            items = recipesUI,
+            key = { _, uiRecipe -> uiRecipe.recipe.id }) { index, uiRecipe ->
+            // Efecto que se lanza cada vez que cambia uiRecipe.isOptionsVisible
+            LaunchedEffect(key1 = uiRecipe.isOptionsVisible) {
+                if (uiRecipe.isOptionsVisible) {
+                    delay(3000L)
+                    recipesUI[index] = uiRecipe.copy(isOptionsVisible = false)
+                }
+            }
+            SwipeableItemWithActions(
+                isRevealed = uiRecipe.isOptionsVisible,
+                actions = {
+                    ActionCard(
+                        onClick = {
+                            recipesUI[index] = uiRecipe.copy(isOptionsVisible = false)
+                            viewModel.deleteRecipe(uiRecipe.recipe.id)
+                        },
+                        backgroundColor = MaterialTheme.colorScheme.errorContainer,
+                        icon = Icons.Default.Delete,
+                        modifier = Modifier
+                            .padding(end = 16.dp)
+                            .fillMaxHeight(),
+                    )
+                },
+                onExpanded = {
+                    recipesUI[index] = uiRecipe.copy(isOptionsVisible = true)
+                },
+                onCollapsed = {
+                    recipesUI[index] = uiRecipe.copy(isOptionsVisible = false)
+                },
+            ) {
+                RecipeCard(recipe = uiRecipe.recipe)
+            }
         }
     }
 }
