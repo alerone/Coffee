@@ -1,5 +1,6 @@
 package com.alvarobrivaro.coffee.ui.inventory
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,8 +27,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -107,7 +110,7 @@ fun PreviewInventoryCard() {
             item = IngredientWithQuantity(
                 ingredient = Ingredient(
                     id = 0,
-                    name = "Milk"
+                    name = "Condensed Milk"
                 ),
                 quantity = 200.0,
                 unit = "ml"
@@ -122,21 +125,8 @@ fun InventoryCard(
     onAddClick: (IngredientWithQuantity) -> Unit = {},
     onRemoveClick: (IngredientWithQuantity) -> Unit = {}
 ) {
-    val imageResource = when {
-        item.ingredient.name.equals("water", ignoreCase = true) -> R.drawable.water
-        item.ingredient.name.contains("milk", ignoreCase = true) -> listOf(
-            R.drawable.big_cup,
-            R.drawable.coffee_cream,
-            R.drawable.milk
-        ).random()
-
-        item.ingredient.name.equals("coffee", ignoreCase = true) -> R.drawable.coffee
-        else -> listOf(
-            R.drawable.ingredient,
-            R.drawable.ingredient_pack,
-            R.drawable.inventory,
-            R.drawable.capsule
-        ).random()
+    val imageResource = remember(item.ingredient.name) {
+        getImageResourceByIngredient(item.ingredient.name)
     }
 
     Card(
@@ -167,6 +157,7 @@ fun InventoryCard(
                 Text(
                     text = item.ingredient.name,
                     style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.fillMaxWidth(),
                     fontWeight = FontWeight.Bold
                 )
 
@@ -174,19 +165,48 @@ fun InventoryCard(
 
                 Text(
                     text = "${item.quantity} ${item.unit}",
+                    modifier = Modifier.fillMaxWidth(),
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
-            Spacer(modifier = Modifier.width(16.dp))
-            IconButton(onClick = { onRemoveClick(item) }) {
-                Icon(imageVector = Icons.Default.Remove, contentDescription = "Remove")
+            Row(Modifier.weight(1f)) {
+                Spacer(Modifier.width(8.dp))
+                IconButton(onClick = { onRemoveClick(item) }) {
+                    Icon(imageVector = Icons.Default.Remove, contentDescription = "Remove")
+                }
+                Spacer(modifier = Modifier.width(8.dp))
+                IconButton(onClick = { onAddClick(item) }) {
+                    Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
+                }
             }
-            Spacer(modifier = Modifier.width(16.dp))
-            IconButton(onClick = { onAddClick(item) }) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
-            }
-
         }
+    }
+}
+
+
+/**
+ * Returns a random image resource based on the ingredient name.
+ * Specific cases for "water", ingredients containing "milk" and
+ * "coffee" are handled. Other cases are just random images.
+ * @param name The name of the ingredient.
+ * @return The corresponding image resource.
+ *
+ */
+fun getImageResourceByIngredient(name: String): Int {
+    return when {
+        name.equals("water", ignoreCase = true) -> R.drawable.water
+        name.contains("milk", ignoreCase = true) -> listOf(
+            R.drawable.big_cup,
+            R.drawable.coffee_cream,
+            R.drawable.milk
+        ).random()
+        name.equals("coffee", ignoreCase = true) -> R.drawable.coffee
+        else -> listOf(
+            R.drawable.ingredient,
+            R.drawable.ingredient_pack,
+            R.drawable.inventory,
+            R.drawable.capsule
+        ).random()
     }
 }
 
