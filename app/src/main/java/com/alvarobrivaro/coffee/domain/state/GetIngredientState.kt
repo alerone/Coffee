@@ -1,7 +1,6 @@
-package com.alvarobrivaro.coffee.domain
+package com.alvarobrivaro.coffee.domain.state
 
 import com.alvarobrivaro.coffee.domain.models.Ingredient
-import com.alvarobrivaro.coffee.domain.models.Recipe
 
 sealed class GetIngredientState {
     object Loading: GetIngredientState()

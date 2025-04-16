@@ -1,4 +1,4 @@
-package com.alvarobrivaro.coffee.domain
+package com.alvarobrivaro.coffee.domain.state
 
 import com.alvarobrivaro.coffee.domain.models.IngredientWithQuantity
 

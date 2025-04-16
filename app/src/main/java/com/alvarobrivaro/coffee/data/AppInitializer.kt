@@ -44,7 +44,7 @@ class AppInitializer @Inject constructor(
                     )
                     dao.insertRecipe(recipe)
 
-                    jsonRecipe.ingredients.forEach { jsonIngredient ->
+                    jsonRecipe.ingredients.forEach{ jsonIngredient ->
                         val recipeIngredient = RecipeIngredientEntity(
                             id = 0, // Auto-generated
                             recipeId = jsonRecipe.id.toLong(),

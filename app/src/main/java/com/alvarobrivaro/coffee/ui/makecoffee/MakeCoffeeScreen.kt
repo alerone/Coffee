@@ -25,7 +25,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import com.alvarobrivaro.coffee.R
-import com.alvarobrivaro.coffee.domain.GetRecipeState
+import com.alvarobrivaro.coffee.domain.state.GetRecipeState
 import com.alvarobrivaro.coffee.domain.models.Recipe
 
 @Composable

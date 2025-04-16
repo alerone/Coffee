@@ -62,8 +62,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import com.alvarobrivaro.coffee.R
-import com.alvarobrivaro.coffee.domain.GetIngredientState
-import com.alvarobrivaro.coffee.domain.GetRecipeState
+import com.alvarobrivaro.coffee.domain.state.GetIngredientState
+import com.alvarobrivaro.coffee.domain.state.GetRecipeState
 import com.alvarobrivaro.coffee.domain.models.Ingredient
 import com.alvarobrivaro.coffee.domain.models.IngredientWithQuantity
 import com.alvarobrivaro.coffee.domain.models.Recipe

@@ -1,3 +1,8 @@
 package com.alvarobrivaro.coffee.domain.models
 
-data class Ingredient(val name: String)
+import android.icu.util.Calendar
+
+data class Ingredient(
+    val id: Long,
+    val name: String
+)

@@ -2,9 +2,9 @@ package com.alvarobrivaro.coffee.ui.makecoffee
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alvarobrivaro.coffee.domain.GetRecipeState
+import com.alvarobrivaro.coffee.domain.state.GetRecipeState
 import com.alvarobrivaro.coffee.domain.GetRecipesUseCase
-import com.alvarobrivaro.coffee.domain.GetRecipeState.Success
+import com.alvarobrivaro.coffee.domain.state.GetRecipeState.Success
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

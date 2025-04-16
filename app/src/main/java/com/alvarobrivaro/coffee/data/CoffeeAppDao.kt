@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import com.alvarobrivaro.coffee.data.ingredient.IngredientEntity
 import com.alvarobrivaro.coffee.data.inventory.InventoryEntity
 import com.alvarobrivaro.coffee.data.inventory.InventoryWithIngredient
@@ -47,8 +48,8 @@ interface CoffeeAppDao {
     @Query("SELECT * FROM inventory WHERE ingredientId = :ingredientId")
     suspend fun getInventoryByIngredientId(ingredientId: Long): InventoryEntity?
 
-    @Query("UPDATE inventory SET quantity = :quantity WHERE ingredientId = :ingredientId")
-    suspend fun updateInventory(ingredientId: Long, quantity: Double)
+    @Update
+    suspend fun updateInventory(inventory: InventoryEntity)
 
     @Transaction
     @Query("SELECT * FROM inventory")

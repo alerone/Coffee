@@ -14,7 +14,7 @@ data class IngredientEntity(
     val name: String,
 ) {
     fun toDomain(): Ingredient {
-        return Ingredient(name = name)
+        return Ingredient(id = id, name = name)
     }
 }
 

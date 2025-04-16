@@ -15,8 +15,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,17 +33,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.compose.foundation.shape.RoundedCornerShape
 import com.alvarobrivaro.coffee.R
-import com.alvarobrivaro.coffee.domain.GetInventoryState
+import com.alvarobrivaro.coffee.domain.models.Ingredient
 import com.alvarobrivaro.coffee.domain.models.IngredientWithQuantity
-import kotlin.random.Random
+import com.alvarobrivaro.coffee.domain.state.GetInventoryState
+import com.alvarobrivaro.coffee.ui.theme.CoffeeTheme
 
 @Composable
 fun InventoryScreen(modifier: Modifier, viewModel: InventoryViewModel = hiltViewModel()) {
@@ -64,27 +71,57 @@ fun InventoryScreen(modifier: Modifier, viewModel: InventoryViewModel = hiltView
             if (inventory.isEmpty()) {
                 EmptyInventoryView(modifier)
             } else {
-                InventoryList(modifier, inventory)
+                InventoryList(
+                    modifier,
+                    inventory,
+                    onAddClick = { viewModel.onAddIngredient(it) },
+                    onRemoveClick = { viewModel.onRemoveIngredient(it) })
             }
         }
     }
 }
 
 @Composable
-fun InventoryList(modifier: Modifier, inventory: List<IngredientWithQuantity>) {
+fun InventoryList(
+    modifier: Modifier,
+    inventory: List<IngredientWithQuantity>,
+    onAddClick: (IngredientWithQuantity) -> Unit = {},
+    onRemoveClick: (IngredientWithQuantity) -> Unit = {}
+) {
     LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(inventory, key = { it.ingredient.name }) { item ->
-            InventoryCard(item)
+        items(inventory, key = { it.ingredient.id }) { item ->
+            InventoryCard(item, { onAddClick(item) }, { onRemoveClick(item) })
         }
     }
 }
 
+@Preview()
 @Composable
-fun InventoryCard(item: IngredientWithQuantity) {
+fun PreviewInventoryCard() {
+    CoffeeTheme(dynamicColor = false, darkTheme = true) {
+        InventoryCard(
+            item = IngredientWithQuantity(
+                ingredient = Ingredient(
+                    id = 0,
+                    name = "Milk"
+                ),
+                quantity = 200.0,
+                unit = "ml"
+            )
+        )
+    }
+}
+
+@Composable
+fun InventoryCard(
+    item: IngredientWithQuantity,
+    onAddClick: (IngredientWithQuantity) -> Unit = {},
+    onRemoveClick: (IngredientWithQuantity) -> Unit = {}
+) {
     val imageResource = when {
         item.ingredient.name.equals("water", ignoreCase = true) -> R.drawable.water
         item.ingredient.name.contains("milk", ignoreCase = true) -> listOf(
@@ -92,6 +129,7 @@ fun InventoryCard(item: IngredientWithQuantity) {
             R.drawable.coffee_cream,
             R.drawable.milk
         ).random()
+
         item.ingredient.name.equals("coffee", ignoreCase = true) -> R.drawable.coffee
         else -> listOf(
             R.drawable.ingredient,
@@ -139,6 +177,15 @@ fun InventoryCard(item: IngredientWithQuantity) {
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
+            Spacer(modifier = Modifier.width(16.dp))
+            IconButton(onClick = { onRemoveClick(item) }) {
+                Icon(imageVector = Icons.Default.Remove, contentDescription = "Remove")
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+            IconButton(onClick = { onAddClick(item) }) {
+                Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
+            }
+
         }
     }
 }

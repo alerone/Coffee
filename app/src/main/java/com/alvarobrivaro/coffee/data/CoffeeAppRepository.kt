@@ -62,7 +62,7 @@ class CoffeeAppRepository @Inject constructor(private val coffeeAppDao: CoffeeAp
     }
 
     suspend fun updateInventory(inventory: InventoryEntity) {
-        coffeeAppDao.updateInventory(inventory.id, inventory.quantity)
+        coffeeAppDao.updateInventory(inventory)
     }
 
     suspend fun insertInventory(ingredientId: Long, quantity: Double, unit: String) {

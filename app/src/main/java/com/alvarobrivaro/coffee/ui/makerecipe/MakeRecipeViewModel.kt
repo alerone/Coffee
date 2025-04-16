@@ -4,13 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alvarobrivaro.coffee.domain.AddRecipeUseCase
 import com.alvarobrivaro.coffee.domain.DeleteRecipeUseCase
-import com.alvarobrivaro.coffee.domain.GetIngredientState
-import com.alvarobrivaro.coffee.domain.GetIngredientState.Success
+import com.alvarobrivaro.coffee.domain.state.GetIngredientState
+import com.alvarobrivaro.coffee.domain.state.GetIngredientState.Success
 import com.alvarobrivaro.coffee.domain.GetIngredientUnitsUseCase
 import com.alvarobrivaro.coffee.domain.GetIngredientsUseCase
 import com.alvarobrivaro.coffee.domain.GetRecipesUseCase
-import com.alvarobrivaro.coffee.domain.GetRecipeState
-import com.alvarobrivaro.coffee.domain.models.Ingredient
+import com.alvarobrivaro.coffee.domain.state.GetRecipeState
 import com.alvarobrivaro.coffee.domain.models.IngredientWithQuantity
 import com.alvarobrivaro.coffee.domain.models.Recipe
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -38,8 +37,8 @@ class MakeRecipeViewModel @Inject constructor(
         )
 
     val getIngredientsState: StateFlow<GetIngredientState> =
-        getIngredientsUseCase().map { ingredients -> 
-            GetIngredientState.Success(ingredients)
+        getIngredientsUseCase().map { ingredients ->
+            Success(ingredients)
         }.catch { GetIngredientState.Error(it) }.stateIn(
             viewModelScope, 
             SharingStarted.WhileSubscribed(5000), 
