@@ -2,6 +2,7 @@ package com.alvarobrivaro.coffee.ui.inventory
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,20 +21,22 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -120,14 +123,8 @@ fun PreviewInventoryCard() {
 }
 
 @Composable
-fun InventoryCard(
-    item: IngredientWithQuantity,
-    onAddClick: (IngredientWithQuantity) -> Unit = {},
-    onRemoveClick: (IngredientWithQuantity) -> Unit = {}
-) {
-    val imageResource = remember(item.ingredient.name) {
-        getImageResourceByIngredient(item.ingredient.name)
-    }
+fun InventoryCard(item: IngredientWithQuantity, onIncrease: () -> Unit = {}, onDecrease: () -> Unit = {}) {
+    val imageResource = remember(item.ingredient.name) { getImageResourceByIngredient(item.ingredient.name) }
 
     Card(
         modifier = Modifier
@@ -157,7 +154,6 @@ fun InventoryCard(
                 Text(
                     text = item.ingredient.name,
                     style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.fillMaxWidth(),
                     fontWeight = FontWeight.Bold
                 )
 
@@ -165,33 +161,59 @@ fun InventoryCard(
 
                 Text(
                     text = "${item.quantity} ${item.unit}",
-                    modifier = Modifier.fillMaxWidth(),
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
-            Row(Modifier.weight(1f)) {
-                Spacer(Modifier.width(8.dp))
-                IconButton(onClick = { onRemoveClick(item) }) {
-                    Icon(imageVector = Icons.Default.Remove, contentDescription = "Remove")
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(50.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(MaterialTheme.colorScheme.primaryContainer),
+                    contentAlignment = Alignment.Center
+                ) {
+                    IconButton(
+                        onClick = onIncrease
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "Increase",
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                            modifier = Modifier.size(80.dp,80.dp)
+                        )
+                    }
                 }
-                Spacer(modifier = Modifier.width(8.dp))
-                IconButton(onClick = { onAddClick(item) }) {
-                    Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Box(
+                    modifier = Modifier
+                        .size(50.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(MaterialTheme.colorScheme.onPrimary),
+                    contentAlignment = Alignment.Center
+                ) {
+                    IconButton(
+                        onClick = onDecrease
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Remove,
+                            contentDescription = "Decrease",
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                            modifier = Modifier.size(80.dp,80.dp)
+                        )
+                    }
                 }
             }
         }
     }
 }
 
-
-/**
- * Returns a random image resource based on the ingredient name.
- * Specific cases for "water", ingredients containing "milk" and
- * "coffee" are handled. Other cases are just random images.
- * @param name The name of the ingredient.
- * @return The corresponding image resource.
- *
- */
 fun getImageResourceByIngredient(name: String): Int {
     return when {
         name.equals("water", ignoreCase = true) -> R.drawable.water

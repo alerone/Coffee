@@ -19,9 +19,9 @@ class AppInitializer @Inject constructor(
     private val context: Context
 ) {
     suspend fun seedIfNeeded() {
-        dao.deleteAllRecipeIngredients()
-        dao.deleteAllIngredients()
-        dao.deleteAllRecipes()
+        //dao.deleteAllRecipeIngredients()
+        //dao.deleteAllIngredients()
+        //dao.deleteAllRecipes()
         val ingredientsCount = dao.getIngredientsCount()
 
         if (ingredientsCount == 0) {
