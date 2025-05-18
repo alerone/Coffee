@@ -33,7 +33,9 @@ class InventoryTest {
             unit = "gr"
         )
         composeTestRule.setContent {
-            InventoryCard(testIngredient)
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                InventoryCard(testIngredient)
+            }
         }
         sleep(1500)
         composeTestRule.onNodeWithTag("inventoryItemName").assertTextContains("TestIngredient")

@@ -183,7 +183,7 @@ fun InventoryCard(item: IngredientWithQuantity, onIncrease: () -> Unit = {}, onD
                 ) {
                     IconButton(
                         modifier = Modifier.testTag("addIngredientButton"),
-                        onClick = onIncrease
+                        onClick = {}
                     ) {
                         Icon(
                             imageVector = Icons.Default.Add,
