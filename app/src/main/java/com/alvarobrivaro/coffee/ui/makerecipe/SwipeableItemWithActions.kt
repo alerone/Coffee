@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.InspectableModifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.IntOffset
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -54,8 +55,9 @@ fun SwipeableItemWithActions(
         modifier = modifier
             .fillMaxWidth()
             .height(IntrinsicSize.Min)
+            .testTag("swipeableItem")
     ) {
-        Row(modifier = Modifier.align(Alignment.CenterEnd).onSizeChanged { cardWidth = it.width.toFloat() }) {
+        Row(modifier = Modifier.align(Alignment.CenterEnd).onSizeChanged { cardWidth = it.width.toFloat() }.testTag("actions")) {
             actions()
         }
         Surface(

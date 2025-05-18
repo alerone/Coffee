@@ -37,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -144,6 +145,7 @@ fun InventoryCard(item: IngredientWithQuantity, onIncrease: () -> Unit = {}, onD
                 modifier = Modifier
                     .size(100.dp)
                     .clip(RoundedCornerShape(8.dp))
+                    .testTag("inventoryImage")
             )
 
             Spacer(modifier = Modifier.width(16.dp))
@@ -154,6 +156,7 @@ fun InventoryCard(item: IngredientWithQuantity, onIncrease: () -> Unit = {}, onD
                 Text(
                     text = item.ingredient.name,
                     style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.testTag("inventoryItemName"),
                     fontWeight = FontWeight.Bold
                 )
 
@@ -161,6 +164,7 @@ fun InventoryCard(item: IngredientWithQuantity, onIncrease: () -> Unit = {}, onD
 
                 Text(
                     text = "${item.quantity} ${item.unit}",
+                    modifier = Modifier.testTag("ingredientQuantity"),
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
@@ -178,6 +182,7 @@ fun InventoryCard(item: IngredientWithQuantity, onIncrease: () -> Unit = {}, onD
                     contentAlignment = Alignment.Center
                 ) {
                     IconButton(
+                        modifier = Modifier.testTag("addIngredientButton"),
                         onClick = onIncrease
                     ) {
                         Icon(
@@ -199,6 +204,7 @@ fun InventoryCard(item: IngredientWithQuantity, onIncrease: () -> Unit = {}, onD
                     contentAlignment = Alignment.Center
                 ) {
                     IconButton(
+                        modifier = Modifier.testTag("decreaseIngredientButton"),
                         onClick = onDecrease
                     ) {
                         Icon(

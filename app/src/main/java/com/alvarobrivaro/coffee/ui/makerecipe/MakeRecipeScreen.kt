@@ -51,6 +51,7 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -132,6 +133,8 @@ fun MakeRecipeScreen(modifier: Modifier, viewModel: MakeRecipeViewModel = hiltVi
         }
     }
 
+
+
     AddRecipeDialog(
         show = showDialog,
         ingUnits = viewModel.ingredientUnits,
@@ -159,6 +162,7 @@ fun AddRecipeDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         containerColor = MaterialTheme.colorScheme.background,
+        modifier = Modifier.testTag("addRecipeDialog"),
         title = {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -175,7 +179,9 @@ fun AddRecipeDialog(
                     text = "Create New Recipe",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.testTag("newRecipeTv"),
                     color = MaterialTheme.colorScheme.onBackground
+
                 )
             }
         },
@@ -184,7 +190,7 @@ fun AddRecipeDialog(
                 verticalArrangement = Arrangement.spacedBy(13.dp)
             ) {
                 CoffeeTextField(
-                    modifier = Modifier,
+                    modifier = Modifier.testTag("nameTextField"),
                     value = recipeName,
                     onValueChange = { recipeName = it },
                     label = "🧾 Name"
@@ -219,7 +225,7 @@ fun AddRecipeDialog(
                     }
 
                     is GetIngredientState.Error -> {
-                        Text("Error loading ingredients")
+                        Text("Error loading ingredients", color = MaterialTheme.colorScheme.error)
                     }
                 }
             }
