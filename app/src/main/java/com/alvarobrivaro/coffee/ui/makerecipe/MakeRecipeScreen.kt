@@ -62,11 +62,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import com.alvarobrivaro.coffee.R
-import com.alvarobrivaro.coffee.domain.state.GetIngredientState
-import com.alvarobrivaro.coffee.domain.state.GetRecipeState
 import com.alvarobrivaro.coffee.domain.models.Ingredient
 import com.alvarobrivaro.coffee.domain.models.IngredientWithQuantity
 import com.alvarobrivaro.coffee.domain.models.Recipe
+import com.alvarobrivaro.coffee.domain.state.GetIngredientState
+import com.alvarobrivaro.coffee.domain.state.GetRecipeState
 import com.alvarobrivaro.coffee.ui.makecoffee.RecipeCard
 import com.alvarobrivaro.coffee.ui.makerecipe.model.RecipeUI
 import com.alvarobrivaro.coffee.ui.theme.CoffeeTheme
@@ -121,17 +121,11 @@ fun MakeRecipeScreen(modifier: Modifier, viewModel: MakeRecipeViewModel = hiltVi
                 EmptyView(modifier)
             } else {
                 Box(modifier = modifier.fillMaxSize()) {
-                    RecipesListNew(
+                    RecipesList(
                         modifier = Modifier.fillMaxWidth(),
                         recipes = recipes,
-                        viewModel = viewModel,
-                        scope = scope
+                        deleteRecipe = { viewModel.deleteRecipe(it) }
                     )
-//                    RecipesList(
-//                        modifier = Modifier.fillMaxWidth(),
-//                        recipes = recipes,
-//                        viewModel = viewModel
-//                    )
                     FabAdd(Modifier.align(Alignment.BottomEnd)) { showDialog = true }
                 }
             }
@@ -140,9 +134,12 @@ fun MakeRecipeScreen(modifier: Modifier, viewModel: MakeRecipeViewModel = hiltVi
 
     AddRecipeDialog(
         show = showDialog,
-        viewModel = viewModel,
+        ingUnits = viewModel.ingredientUnits,
         onDismiss = { showDialog = false },
-        onConfirm = { showDialog = false },
+        onConfirm = { name, description, ingredients ->
+            viewModel.createRecipe(name, description, ingredients)
+            showDialog = false
+        },
         ingredientsState = getIngredientsState
     )
 }
@@ -150,9 +147,9 @@ fun MakeRecipeScreen(modifier: Modifier, viewModel: MakeRecipeViewModel = hiltVi
 @Composable
 fun AddRecipeDialog(
     show: Boolean,
-    viewModel: MakeRecipeViewModel,
     onDismiss: () -> Unit,
-    onConfirm: () -> Unit,
+    onConfirm: (String, String, List<IngredientWithQuantity>) -> Unit,
+    ingUnits: List<String> = emptyList(),
     ingredientsState: GetIngredientState
 ) {
     var recipeName by remember { mutableStateOf("") }
@@ -201,7 +198,7 @@ fun AddRecipeDialog(
                 )
                 when (ingredientsState) {
                     is GetIngredientState.Success -> {
-                        val ingredients = ingredientsState.recipes
+                        val ingredients = ingredientsState.ingredients
                         IngredientList(
                             ingredients = ingredients,
                             selectedIngredients = selectedIngredients,
@@ -213,7 +210,7 @@ fun AddRecipeDialog(
                                 )
                                 selectedIngredients = selectedIngredients + newIngredient
                             },
-                            ingredientUnits = viewModel.ingredientUnits
+                            ingredientUnits = ingUnits
                         )
                     }
 
@@ -230,8 +227,7 @@ fun AddRecipeDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    viewModel.createRecipe(recipeName, recipeDescription, selectedIngredients)
-                    onConfirm()
+                    onConfirm(recipeName, recipeDescription, selectedIngredients)
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
@@ -523,7 +519,11 @@ fun DropdownMenuUnits(
 }
 
 @Composable
-fun RecipesListNew(modifier: Modifier, recipes: List<Recipe>, viewModel: MakeRecipeViewModel, scope: CoroutineScope) {
+fun RecipesList(
+    modifier: Modifier,
+    recipes: List<Recipe>,
+    deleteRecipe: (Int) -> Unit = {},
+) {
     val recipesUI = recipes.map { RecipeUI(it) }.toMutableStateList()
     LazyColumn(
         modifier = modifier.fillMaxSize(),
@@ -546,7 +546,7 @@ fun RecipesListNew(modifier: Modifier, recipes: List<Recipe>, viewModel: MakeRec
                     ActionCard(
                         onClick = {
                             recipesUI[index] = uiRecipe.copy(isOptionsVisible = false)
-                            viewModel.deleteRecipe(uiRecipe.recipe.id)
+                            deleteRecipe(uiRecipe.recipe.id)
                         },
                         backgroundColor = MaterialTheme.colorScheme.errorContainer,
                         icon = Icons.Default.Delete,
